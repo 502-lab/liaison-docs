@@ -1,0 +1,45 @@
+name: Discord PR Notify
+
+# pull_request가 아닌 pull_request_target을 사용:
+# 충돌(conflict) 상태의 PR은 테스트 머지 커밋을 만들 수 없어 pull_request 워크플로우가
+# 실행되지 않지만, pull_request_target은 base 브랜치 기준으로 실행되어 항상 알림이 나간다.
+# (PR 코드를 체크아웃하지 않으므로 시크릿 노출 위험 없음)
+on:
+  pull_request_target:
+    types: [opened, reopened, ready_for_review]
+
+jobs:
+  notify:
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Discord notification
+        env:
+          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          REPO: ${{ github.repository }}
+        run: |
+          payload=$(jq -n \
+            --arg title "#${PR_NUMBER} ${PR_TITLE}" \
+            --arg url "$PR_URL" \
+            --arg repo "$REPO" \
+            --arg author "$PR_AUTHOR" \
+            --arg branch "${HEAD_REF} → ${BASE_REF}" \
+            '{
+              embeds: [{
+                title: ("📢 새 PR: " + $title),
+                url: $url,
+                color: 5814783,
+                fields: [
+                  {name: "레포", value: $repo, inline: true},
+                  {name: "작성자", value: $author, inline: true},
+                  {name: "브랜치", value: $branch, inline: false}
+                ]
+              }]
+            }')
+          curl -sf -H "Content-Type: application/json" -d "$payload" "$WEBHOOK_URL"
