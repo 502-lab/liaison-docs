@@ -8,6 +8,9 @@ on:
   pull_request_target:
     types: [opened, reopened, ready_for_review]
 
+# 알림은 Discord 웹훅(시크릿)으로만 보내고 GitHub 토큰은 쓰지 않으므로 토큰 권한을 모두 끈다.
+permissions: {}
+
 jobs:
   notify:
     if: ${{ !github.event.pull_request.draft }}
