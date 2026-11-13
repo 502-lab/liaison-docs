@@ -1,7 +1,7 @@
 # 도메인 모델 요약
 
 - **담당:** 개발 총괄. 이름은 [GLOSSARY.md](GLOSSARY.md), 규칙은 [CODE_CONVENTIONS.md](CODE_CONVENTIONS.md)를 따릅니다.
-- **상태:** v1.0 스키마 설계(WBS 1.0.2·1.0.3) 전의 요약입니다. 확정되면 ERD와 함께 갱신합니다. (2026-11-04 숙제 세부 규칙·추가 인증, 2026-11-05 기획서 재검토 결정, 2026-11-08 같은 과목 열람 반영)
+- **상태:** v1.0 스키마 설계(WBS 1.0.2·1.0.3) 전의 요약입니다. 확정되면 ERD와 함께 갱신합니다. (2026-11-04 숙제 세부 규칙·추가 인증, 2026-11-05 기획서 재검토 결정, 2026-11-08 같은 과목 열람, 2026-11-13 문서 통합안으로 `PILOT_ENDED` 제거 반영)
 - "설계 때 확정"이라고 적은 이름·값은 용어집과 같이 그 WBS 설계 때 확정합니다.
 
 ## 1. 핵심 관계
@@ -112,7 +112,7 @@ AccessLog(접근 기록: ID만, 1년 이상) / PermissionChangeLog(권한 변경
 |---|---|---|
 | 역할 | `MembershipRole` | `DIRECTOR`, `TEACHER`, `STUDENT`, `GUARDIAN` (소속당 여러 개) |
 | 소속 상태 | `MembershipStatus` | `INVITED` → `PENDING_APPROVAL` → `ACTIVE` / `SUSPENDED` / `ENDED` |
-| 종료 사유 | `MembershipEndReason` | `CONSENT_WITHDRAWN`, `LEFT`, `ACADEMY_TERMINATED`, `PILOT_ENDED`, `RECONSENT_EXPIRED`(재동의 기한 지남: 14세 도달·동의서 변경), `UNDER_14`(정정으로 만 14세 미만) |
+| 종료 사유 | `MembershipEndReason` | `CONSENT_WITHDRAWN`, `LEFT`, `ACADEMY_TERMINATED`(파일럿을 그만 쓰는 학원 포함), `RECONSENT_EXPIRED`(재동의 기한 지남: 14세 도달·동의서 변경), `UNDER_14`(정정으로 만 14세 미만) |
 | 숙제 형태 | `HomeworkKind` | `TEXTBOOK`, `FREE` |
 | 수행 기록 값 | `PerformanceResult` | `COMPLETE`, `PARTIAL`, `INCOMPLETE`, `EXEMPT` |
 | 수행 기록 상태 | `RecordState` | `PROPOSED`(시스템이 미리 채움), `CONFIRMED`(선생님 확정). "미기록" = 확정되지 않음 |
