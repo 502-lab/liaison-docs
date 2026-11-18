@@ -11,7 +11,7 @@ Liaison의 **공통 문서 저장소**입니다. `liaison-app`, `liaison-back`, 
 | [AI_RULES.md](AI_RULES.md) | AI가 작업 전에 반드시 지킬 규칙(가장 먼저 읽기) | 개발 총괄 |
 | [GLOSSARY.md](GLOSSARY.md) | 용어집 — 표준어·코드 이름·뜻 | 기획(PM) |
 | [CODE_CONVENTIONS.md](CODE_CONVENTIONS.md) | 코드 이름 규칙, API 규칙(응답·오류·시간·ID) | 개발 총괄 |
-| [GIT_CONVENTIONS.md](GIT_CONVENTIONS.md) | 커밋·브랜치·PR 규칙 | 개발 총괄 |
+| [GIT_CONVENTIONS.md](GIT_CONVENTIONS.md) | 커밋·브랜치·PR·이슈 규칙 | 개발 총괄 |
 | [DOMAIN.md](DOMAIN.md) | 도메인 모델 요약(엔티티 관계, 상태 값) | 개발 총괄 |
 | [PRIVACY_RULES.md](PRIVACY_RULES.md) | 개발자가 지킬 개인정보 규칙 요약 | 법무 |
 
