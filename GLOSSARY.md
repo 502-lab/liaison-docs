@@ -130,7 +130,7 @@
 |---|---|---|---|
 | 원장 대시보드 | `Dashboard` | 학원 전체·학생별 이행률과 진도, 선생님별 기록률, 기간별 추이 | v1.2. 반별 이행률은 v1.3. 기본 구독 기능 |
 | 주의 학생 | — (저장하지 않음) | 원장이 정한 기준에 걸린 학생. 예측이 아니라 규칙으로 판정한 결과입니다 | 원장만 봅니다(모든 과목을 합쳐 판정한 결과라 다른 과목 정보가 드러나기 때문). 담당 선생님은 자기 과목 숙제로 센 이행률·미제출만 봅니다. 학부모에게는 보내지 않습니다 |
-| 주의 학생 기준 | `AtRiskRule` | 원장이 설정하는 규칙. 기간 + 미제출 횟수, 또는 이행률 % 미만 | 첫 값은 '최근 14일 미제출 3회 이상 또는 최근 30일 이행률 60% 미만, 하나만 충족해도'이고(11/20), 원장 인터뷰(WBS 1.2.7)로 다듬습니다. 판정은 하루 한 번 하고, 원장이 기준을 바꾸면 다음 판정부터 적용합니다(지난 판정은 거슬러 바꾸지 않음) |
+| 주의 학생 기준 | `AtRiskRule` | 원장이 설정하는 규칙. 기간 + 미제출 횟수, 또는 이행률 % 미만 | 첫 값은 '최근 14일 미제출 3회 이상 또는 최근 30일 이행률 60% 미만, 하나만 충족해도'이고(11/20), 원장 인터뷰(WBS 1.2.7)로 다듬습니다. 판정은 하루 한 번 하고, 원장이 기준을 바꾸면 다음 판정부터 적용합니다(지난 판정은 거슬러 바꾸지 않음). 두 기준(미제출 횟수, 이행률)은 각각 켜고 끌 수 있고, 하나 이상 켜야 저장됩니다. 범위는 미제출 기간 1~90일·횟수 1~30회, 이행률 기간 1~90일·1~99%입니다. 조건은 '하나만 충족해도'(처음 값) / '모두 충족할 때만' 중에서 고르고, 코드 이름은 `AtRiskRuleMatch { ANY, ALL }`(가칭, 확정은 해당 WBS 설계 때)입니다(11/21) |
 | 주의 학생 알림 | `AtRiskAlert` | 주의 학생이 생기면 원장에게 보내는 알림. 상태가 바뀔 때만 다시 보냅니다 | 푸시 본문: "확인할 학생 알림이 있습니다"(학생 이름·판정 문구 없음) |
 | 처리 상태 | `AlertStatus { OPEN, HANDLED }` | 주의 학생 알림을 원장이 처리했는지 표시하는 값 | 원장이 고칠 수 있습니다 |
 | 상담 카드 | `CounselingCard` | 학생 한 명의 정보를 한 화면에 모은 것(이행률 추이, 교재별 진도, 시험 점수, 과거 상담 기록) | v1.2. 상담 직전 1분 안에 파악하는 용도. 담당 선생님이 열면 자기 과목의 이행률·진도·시험 점수만 보이고, 상담 기록은 자기가 쓴 것만 보입니다 |
@@ -189,14 +189,14 @@
 | 학생과의 관계 | `GuardianRelation { FATHER, MOTHER, GRANDPARENT, LEGAL_GUARDIAN, OTHER }` | 보호자가 가입할 때 고르는 학생과의 관계: 부 / 모 / 조부모 / 그 밖의 법정대리인 / 기타 | v1.3. 기타를 골라도 자유 입력란은 두지 않습니다(최소 수집) |
 | 선생님 가입 고지 | — | 선생님이 가입할 때 "원장이 선생님별 기록률(이름순 목록, 정렬·순위 없음)과 수정 이력을 본다, 퇴사하면 소속 정보는 30일 안에 지우고 남긴 기록은 학원에 남는다, 제출 사진·학습지를 개인 기기나 메신저로 따로 저장하거나 보내지 않는다"를 보여주고 확인받는 것. 일정 줄('내가 등록한 일정은 담당 학생·보호자와 원장에게 보여요', 공유 일정 F-022)과 메시지 줄(원장이 내 메시지를 볼 수 있음)은 '시작하는 날부터' 설명으로 처음부터 넣습니다. 그래서 v2.3·v3.2가 켜질 때 고지를 다시 보여 주지 않고, 메시지 대화 맨 위 원장 열람 안내와 일정 입력 칸 고정 안내가 그때그때 알립니다(11/21) | 웹 첫 로그인 때 약관 동의와 함께 받습니다. 선생님 역할이 있고 원장 역할이 없는 소속에만 보입니다. 원장 겸 선생님(그 학원 원장 본인)에게는 보이지 않고, 선생님 수는 기준이 아닙니다. 나중에 원장 역할이 빠지고 선생님 역할만 남으면 그때 보여 줍니다 |
 | 이용약관 / 개인정보처리방침 | — | 서비스 계약 문서 / 개인정보를 어떻게 다루는지 공개하는 문서 | 게시 페이지(WBS 1.0.31). 약관 변경은 7일 전(불리하면 30일 전) 공지 |
-| 열람·정정·삭제 요청 | — | 정보주체가 자기 정보를 보거나 고치거나 지워 달라고 하는 것 | 앱 설정 > 개인정보에서 학원을 골라 요청을 보내면 그 학원 원장이 접수 후 10일 안에 처리합니다. 소속 없는 계정의 요청은 운영자가 받습니다. 정정은 항목만 고르고 자유 입력 칸은 없습니다(학원에 말하기 어려운 내용은 운영자 문의 이메일로도 받습니다). 요청 기록은 이름 없이 ID만 처리한 날부터 3년 보관합니다(v1.0) |
+| 열람·정정·삭제 요청 | — | 정보주체가 자기 정보를 보거나 고치거나 지워 달라고 하는 것 | 앱 설정 > 개인정보에서 학원을 골라 요청을 보내면 그 학원 원장이 접수 후 10일 안에 처리합니다. 소속 없는 계정의 요청은 운영자가 받습니다. 정정은 항목만 고르고 자유 입력 칸은 없습니다(학원에 말하기 어려운 내용은 운영자 문의 이메일로도 받습니다). 요청 기록은 이름 없이 ID만 처리한 날부터 3년 보관합니다(v1.0). 기록 표는 `privacy_requests`(가칭)이고 원장 계정 삭제 요청도 같은 표에 남깁니다(11/21) |
 | 데이터 내보내기 | `export` | 원장 웹에서 학생 한 명의 데이터를 내려받는 기능(CSV + 아직 삭제되지 않은 사진 ZIP) | 학원 해지 때는 학원 전체 내보내기. ZIP은 AES-256 암호로 잠그고, 암호는 만들 때 한 번만 보여 줍니다(Windows 기본 압축 풀기는 열지 못해 반디집·7-Zip을 안내). 내보내기는 접근 기록에 남깁니다 |
 | 접근 기록 | `AccessLog` | 누가 언제 어떤 개인정보에 접근했는지 남기는 기록. 이름 없이 ID만 남깁니다 | 법령에 따라 1년 이상 보관하고, 학생을 삭제해도 남습니다 |
 | 권한 변경 기록 | `PermissionChangeLog` (테이블 `permission_change_logs`) | 누가 누구의 역할·담당·인증 수단을 바꾸거나 승인했는지 남기는 기록. 새 기기 등록·분실 복구·잠금 해제 승인과 본인 확인 방법도 여기에 남깁니다 | 3년 보관. 접근 기록은 개인정보를 보거나 고치거나 지우거나 내보낸 기록이고, 이것은 권한을 바꾼 기록입니다. 둘 다 이름 없이 ID와 코드만 남깁니다 |
 | 학원 해지 | 종료 사유 `ACADEMY_TERMINATED` | 학원이 서비스 이용을 끝내는 것 | 해지 요청 후 30일 동안 읽기·내보내기만 가능, 요청일부터 37일 안에 백업까지 파기 후 통지. 해지 요청 후 30일 안에는 철회할 수 있습니다. 재수탁자 변경을 거부하는 방법도 학원 해지 요청입니다(재수탁자 참고). 결제하지 않아 잠긴 뒤 90일이 지나면 해지됩니다(요금제 참고) |
 | 소속 없는 계정 | — | 학원 소속이 하나도 남지 않은 계정 | 로그인 수단과 알림용 기기 값만 남기고, 1년 동안 새 소속이 없으면 30일 전 푸시 후 삭제. 로그인하면 앱·웹 모두 "다니는 학원이 없어요" 화면에서 초대 수락·계정 삭제·개인정보(동의·철회 기록, 처리방침, 요청 보내기)만 씁니다. 이때 개인정보 요청은 운영자가 받아 학원에 전달합니다 |
 | 계정 삭제 | — | 본인이 앱 안에서 즉시 계정을 지우는 것(스토어 정책) | 애플 로그인 사용자는 Apple 토큰 해지를 함께 호출합니다. 랜딩에 웹 삭제 요청 페이지가 있습니다. 선생님이 지우면 그 소속은 퇴사(`LEFT`)로 끝나고 원장에게 알립니다(넘겨받을 담당은 원장이 퇴사 처리에서 고름). 원장 역할이 있는 계정은 랜딩 삭제 요청으로 받아 운영자가 요청 후 10일 안에 학원 쪽 처리를 마치고 지웁니다. 삭제는 막지 않고 안내만 합니다 |
-| 원장 계정 삭제 요청 | `AccountDeletionRequest`, `AccountDeletionRequestStatus { PENDING, COMPLETED, CANCELED }` | 원장 역할이 있는 계정의 삭제 요청을 운영자가 처리할 때까지 보관하는 기록 | 계정 id·요청 시각·상태·처리 시각만 두고 이름은 없습니다. 상태는 대기 / 완료 / 취소(요청자가 취소를 알림)이고, 값과 열람·정정·삭제 요청 기록과의 통합 여부는 WBS 1.0.32 설계 때 확정합니다. 학원의 유일한 원장이면 결과 화면에서 운영자에게 먼저 연락하라고 안내합니다 |
+| 원장 계정 삭제 요청 | `privacy_requests`(가칭)의 `request_type = ACCOUNT_DELETION` | 원장 역할이 있는 계정의 삭제 요청을 운영자가 처리할 때까지 보관하는 기록 | 따로 표를 두지 않고 열람·정정·삭제 요청 기록과 합쳤습니다(11/21 개발 총괄 확정, 옛 이름 `AccountDeletionRequest`·`AccountDeletionRequestStatus`는 쓰지 않음). 계정 id·요청 시각·상태·처리 시각만 두고 이름은 없습니다. 상태는 대기 `PENDING` / 완료 `COMPLETED` / 취소 `CANCELED`(요청자가 취소를 알림)이고, 거절 `REJECTED`는 없습니다. 코드 이름 확정은 WBS 1.0.32 설계 때입니다. 학원의 유일한 원장이면 결과 화면에서 운영자에게 먼저 연락하라고 안내합니다 |
 | 가명 통계 | — | 개인을 알아볼 수 있는 정보를 지우고 여러 학원 데이터를 합친 통계. 가명 처리한 정보(가명정보)도 개인정보로 봅니다 | **현재는 하지 않습니다.** 나중에 하려면 위탁 문서를 먼저 고치고 학원 동의(필요하면 정보주체 동의)를 받아야 하며, 동의하지 않은 학원 데이터는 쓰지 않습니다. 후보 3가지: 주의 기준값 다듬기, 영업용 집계(운영자 목적이라 검토가 더 필요), 교재별 진도 추천 |
 | 개인정보 처리 위탁 문서 (위탁 문서) | — | 학원(처리자)과 운영자(수탁자)가 맺는 문서. 맡기는 업무 범위와 하지 않는 일을 정합니다 | 원장 웹에서 동의해야 학원이 활성화됩니다(v1.3). 파일럿 학원과 웹 동의 기능이 준비되기 전에 가입하는 학원은 원장이 종이·PDF로 직접 서명하고(팀원 대리 서명 금지) 운영자가 서면 동의 기록으로 넣습니다 |
 | 재수탁자 | — | 운영자가 다시 맡기는 업체(서버·저장소 업체, FCM·APNs, 브라우저 푸시 서비스 등) | 학원은 위탁 문서 서명 때 허용 범위에 미리 동의합니다. 범위 안 교체는 적용 45일 전에 알립니다(원장 웹 통지, v1.3). 거부는 학원 해지 요청으로 하고(위약금 없음), 해지 요청이 접수될 때 거부로 기록합니다. 해지를 요청하지 않으면 답이 없는 것과 같이 적용일에 적용되고, 해지를 철회하면 거부도 철회되어 적용됩니다. 해지를 요청한 학원의 데이터는 새 업체로 옮기지 않습니다. 범위 밖 변경(예: 해외 서버, 맡기는 항목·목적이 늘어남)은 통지 화면을 쓰지 않고, 바뀐 위탁 문서에 원장 서명을 받습니다(운영 절차). 동의를 받기 전까지 그 학원에는 적용하지 않고, 모든 학원이 함께 쓰는 서버 등이면 적용일을 미룹니다 |
@@ -281,3 +281,48 @@
 | 다중 소속 | 여러 학원 소속(학생이 여러 학원에 다님) / 담당 여러 명(한 학원 안에서 담당 선생님이 여럿) | 두 뜻으로 읽혀 헷갈립니다. 특히 원장·선생님 화면에서 여러 학원에 다닌다는 뜻으로 읽히면 안 됩니다 |
 | 고객지원 | 운영자 문의 이메일(학생·보호자는 학원 대표번호) | 창구를 하나로 둡니다(11/20). 화면에 '고객지원' 화면이 따로 없습니다 |
 | 과외 모드 | 개인 과외 | 표준어 통일(11/21). 화면 머리 표시도 '개인 과외'입니다 |
+
+## 11. 데이터 표·칸 값 가칭 (ERD, 11/21)
+
+- **용도**: ERD 명세서(동의·기록·삭제·보관·수행 기록·점수·알림·공지 파트 v0.2)에서 쓰는 표·칸 이름 가운데 용어집에 아직 없는 것을 가칭으로 둡니다. 코드 이름 규칙(테이블은 snake_case 복수)을 따르고, 확정은 해당 WBS 설계 때 합니다. 화면·문서에서 부르는 표준어는 1~9장 행을 따릅니다.
+- **칸 값**: enum 값(UPPER_SNAKE, DB에는 문자열)입니다. enum 이름(PascalCase)은 설계 때 정합니다. 이미 있는 enum(`ConsentType`, `GuardianRelation`, `VerificationMethod`, `NotificationChannel`, `PerformanceResult`, `RecordState`, `AlertStatus`)과 같은 값은 여기 다시 적지 않았고, 그 일부만 쓰는 칸은 '…만'으로 적었습니다.
+
+### 11-1. 새 표 (가칭)
+
+| 코드 이름 (가칭) | 뜻 | 버전 | 비고 |
+|---|---|---|---|
+| `consent_documents` | 동의서·약관·고지·위탁 문서의 버전(서버가 내려주는 문안) | v1.0 | 가칭. 코드 이름 확정은 해당 WBS 설계 때. 칸 값(가칭): `document_kind`(문서 종류): STUDENT_PRIVACY / GUARDIAN_PRIVACY / GUARDIAN_FORM / TERMS / PRIVACY_POLICY / PROCESSING_AGREEMENT / TEACHER_NOTICE (가칭); `change_kind`(이전 버전과 비교한 변경 종류): NOTICE_ONLY / RECONSENT_REQUIRED / OPTIONAL_ITEMS_CHANGED / UNFAVORABLE (가칭). 첫 버전은 NULL |
+| `consent_document_items` | 문서별 동의 항목(필수·선택, 문구) — 동의 화면을 서버가 그리게 함 | v1.0 | 가칭. 코드 이름 확정은 해당 WBS 설계 때 |
+| `guardian_consent_forms` | 14세 미만 법정대리인 서면 동의서(원장이 입력) | v1.3 | 가칭. 코드 이름 확정은 해당 WBS 설계 때. 칸 값(가칭): `guardian_relation`(학생과의 관계): FATHER / MOTHER / LEGAL_GUARDIAN만; `received_channel`(받은 방법): DIRECT / PHOTO_SCAN (가칭); `verification_method`(법정대리인 확인 방법): IN_PERSON / PHONE |
+| `teacher_notice_acknowledgements` | 선생님 가입 고지 확인 | v1.0 | 가칭. 코드 이름 확정은 해당 WBS 설계 때 |
+| `organization_agreements` | 위탁 문서 동의(학원 단위). 서면 v1.0부터, 웹 v1.3 | v1.0 | 가칭. 코드 이름 확정은 해당 WBS 설계 때. 칸 값(가칭): `response`(응답): AGREED / DECLINED. DECLINED는 범위 밖 변경 서면 응답에만. default AGREED |
+| `subprocessor_changes` | 재수탁자 변경 건(운영자 등록) | v1.3 | 가칭. 코드 이름 확정은 해당 WBS 설계 때. 칸 값(가칭): `scope`(범위): IN_SCOPE / OUT_OF_SCOPE (가칭). 판정은 법무 |
+| `subprocessor_change_responses` | 재수탁자 변경에 대한 학원별 응답 | v1.3 | 가칭. 코드 이름 확정은 해당 WBS 설계 때. 칸 값(가칭): `response`(응답): CONFIRMED / REJECTED. 미응답은 행 없음 |
+| `subprocessor_change_reminders` | 범위 밖 변경의 재안내 기록(운영자 입력) | v1.3 | 가칭. 코드 이름 확정은 해당 WBS 설계 때. 칸 값(가칭): `channel`(수단): EMAIL / PHONE |
+| `organization_terminations` | 학원 해지 요청(학원 파기 뒤에도 남는 기록) | v1.3 | 가칭. 코드 이름 확정은 해당 WBS 설계 때. 칸 값(가칭): `reason`(해지 사유): DIRECTOR_REQUEST / LOCK_EXPIRED(잠긴 지 90일) / PILOT_NOT_CONTINUED / OPERATOR (가칭) |
+| `system_setting_changes` | 기능 스위치·켠 버전 목록 변경 기록 | v1.0 | 가칭. 코드 이름 확정은 해당 WBS 설계 때 |
+| `privacy_requests` | 열람·정정·삭제 요청 기록(원장 계정 삭제 요청 포함, 11/21 개발 확정) | v1.0 | 가칭. 코드 이름 확정은 해당 WBS 설계 때. 칸 값(가칭): `request_type`(요청 종류): ACCESS / CORRECTION / DELETION / ACCOUNT_DELETION (가칭); `correction_item`(정정할 항목): v1.1 · NULL 허용. NAME / GRADE / BIRTH_DATE / SCHOOL_NAME / HOMEWORK / PERFORMANCE_RECORD / OTHER (가칭). 자유 입력 없음; `status`(처리 상태): PENDING / COMPLETED / REJECTED / CANCELED (가칭). ACCOUNT_DELETION에는 REJECTED가 없습니다(원장 계정 삭제 요청 행) |
+| `deletion_runs` | 자동 삭제 작업 실행 기록 | v1.0 | 가칭. 코드 이름 확정은 해당 WBS 설계 때. 칸 값(가칭): `job_type`(작업 종류): MEMBERSHIP_DATA / SUBMISSION_PHOTOS / WORKSHEET_FILES / INVITATIONS / UNAPPROVED_SIGNUPS / ORPHAN_ACCOUNTS / ORGANIZATION_PURGE / LOG_EXPIRY / GUARDIAN_LINKS(v1.3) / SCHEDULES(v2.3) / MESSAGES(v3.2) / TUTOR_SIGNUPS(v3.3) (가칭); `result`(결과): SUCCEEDED / FAILED |
+| `operator_announcements` | 운영자 안내(사고 대응) | v1.0 | 가칭. 코드 이름 확정은 해당 WBS 설계 때. 칸 값(가칭): `audience_kind`(대상 지정 방식): ALL / ORGANIZATIONS / USERS (가칭) |
+| `operator_announcement_recipients` | 운영자 안내의 받는 사람별 발송·읽음 | v1.0 | 가칭. 코드 이름 확정은 해당 WBS 설계 때 |
+| `performance_record_histories` | 수행 기록 수정 이력(확정 뒤 고친 것) | v1.1 | 가칭. 코드 이름 확정은 해당 WBS 설계 때 |
+| `exams` | 시험(학원이 정한 시험명·대표 날짜) | v1.1 | 가칭. 코드 이름 확정은 해당 WBS 설계 때 |
+| `teacher_memo_shares` | 인수인계로 새 담당에게 보여 주는 메모 | v1.3 | 가칭. 코드 이름 확정은 해당 WBS 설계 때 |
+| `notice_audience_roles` | 일반 공지의 받는 역할 | v1.3 | 가칭. 코드 이름 확정은 해당 WBS 설계 때 |
+| `notice_revisions` | 공지 수정 기록(공지 기한을 지켰다는 근거) | v1.3 | 가칭. 코드 이름 확정은 해당 WBS 설계 때 |
+| `notice_reads` | 공지 읽음·배너 닫기(계정별) | v1.3 | 가칭. 코드 이름 확정은 해당 WBS 설계 때 |
+| `terms_change_acknowledgements` | 바뀐 내용 안내 확인(불리한 약관 변경) | v2.0 | 가칭. 코드 이름 확정은 해당 WBS 설계 때. 기기 정보·IP 없음. 계정 삭제 때 함께 삭제 |
+| `ai_screening_results` | AI 판독 결과(분류·신뢰도·시각만) | v3.0 | 가칭. 코드 이름 확정은 해당 WBS 설계 때. AI가 만든 설명 글은 저장하지 않음. 동의 철회하면 즉시 삭제, 학생이 사진 묶음을 바꾸면 그 제출의 결과도 삭제, 프리미엄이 끝나면 숨기기만. 비교용 값의 저장 위치는 3.0.1 |
+| `problem_analyses` | 유형 분석(문항 번호·정오·유형만) | v3.1 | 가칭. 코드 이름 확정은 해당 WBS 설계 때. 문제 지문은 저장하지 않음. AI 판독 동의 학생의 제출만 |
+
+### 11-2. 이미 있는 표의 새 칸 값 (가칭)
+
+| 칸 | 뜻 | 값 | 비고 |
+|---|---|---|---|
+| `terms_consents.client_type` | 동의한 곳 | APP / WEB | 가칭. 확정은 해당 WBS 설계 때 |
+| `membership_consents.withdraw_channel` | 철회를 받은 방법 | APP / IN_PERSON / PHONE / WRITTEN / LINK_ENDED(v2.3, 보호자 연결 해제로 끝남) (가칭). 14세 미만 철회는 말·전화로도 받음 | 가칭. 확정은 해당 WBS 설계 때 |
+| `access_logs.actor_type` | 행위자 종류 | USER / OPERATOR / ACADEMY_DEVICE(v2.3) / SYSTEM | 가칭. 확정은 해당 WBS 설계 때 |
+| `access_logs.action` | 행위 | VIEW / CREATE / UPDATE / DELETE / EXPORT / DOWNLOAD (가칭) | 가칭. 값 목록 확정은 WBS 1.0.24b |
+| `access_logs.target_type` | 대상 종류 | 예: MEMBERSHIP / HOMEWORK / SUBMISSION_PHOTO / PERFORMANCE_RECORD / EXAM_SCORE / TEACHER_MEMO / COUNSELING_NOTE / STUDENT_EXPORT / REPORT (가칭) | 가칭. 값 목록 확정은 WBS 1.0.24b |
+| `permission_change_logs.actor_type` | 행위자 종류 | USER / OPERATOR / SYSTEM | 가칭. 확정은 해당 WBS 설계 때 |
+| `permission_change_logs.change_code` | 변경 코드 | 예: ROLE_ADDED / ROLE_REMOVED / ASSIGNMENT_ADDED / ASSIGNMENT_REMOVED / RESPONSIBILITY_TRANSFERRED / MEMBERSHIP_APPROVED / MEMBERSHIP_SUSPENDED / MEMBERSHIP_UNSUSPENDED / AUTH_APPROVAL_APPROVED / AUTH_APPROVAL_REJECTED / ORGANIZATION_CREATED / ORGANIZATION_REGISTRATION_VERIFIED / DIRECTOR_INVITATION_ISSUED. 사건 하나에 코드 하나 | 가칭. 예시 목록, 확정은 해당 WBS 설계 때 |
