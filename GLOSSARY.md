@@ -171,7 +171,7 @@
 | 개인정보처리자 (처리자) | — | 개인정보를 자기 목적으로 다루는 쪽. 학원 데이터에서는 **학원**입니다(개인 과외는 과외 선생님 본인) | |
 | 수탁자 | — | 처리자의 부탁을 받아 대신 다루는 쪽. 학원 데이터에서는 **운영자**입니다 | 로그인 계정 정보는 운영자가 직접 처리합니다(처리자) |
 | 동의 | `Consent` | 개인정보 처리나 약관에 대한 정보주체의 동의 | 필수 / 선택으로 나눕니다. 미리 체크하지 않고 "전체 동의" 버튼을 두지 않습니다. 선택 동의는 가입 뒤에도 설정 > 개인정보에서 항목별로 켜고 끕니다. 켤 때는 그 항목의 동의 문안을 보여 주고 새 동의 기록으로 쌓습니다 |
-| 개인정보 동의 기록 | `MembershipConsent` | 학원별 소속 단위로 저장하는 개인정보 동의 한 건 | 종류, 방식, 입력 주체, 동의서 버전, 시각, 항목별 동의 여부, 기기 정보(OS·앱 버전만, 기기 고유 ID·IP는 저장하지 않음), 철회 시각 |
+| 개인정보 동의 기록 | `MembershipConsent` | 학원별 소속 단위로 저장하는 개인정보 동의 한 건 | 종류, 방식, 입력 주체, 동의서 버전, 시각, 항목별 동의 여부, 기기 정보(OS·앱 버전만, 기기 고유 ID·IP는 저장하지 않음), 철회 시각. 11/21부터 철회를 받은 방법·철회를 입력한 원장, 무효 표시 시각, 14세 미만 서면 동의서(v1.3), 보호자 연결(v2.3)도 둡니다(가칭 칸 이름은 11-2) |
 | 동의 종류 | `ConsentType { REQUIRED, GUARDIAN_VIEW, EXAM_SCORE, GUARDIAN_CONSENT }` | 필수 / 보호자 열람 / 시험 점수 / 14세 미만 보호자 동의 | AI 판독 선택 동의(v3.0)의 값은 WBS 3.0.1 설계 때, 보호자 등원 알림 선택 동의(v2.3)의 값은 WBS 2.3.1 설계 때 확정합니다 |
 | 동의 방식 | `ConsentMethod { ELECTRONIC, WRITTEN }` | 앱 안 전자 동의 / 서면 | 14세 이상 학생은 앱 안 전자 동의 |
 | 동의 입력 주체 | `ConsentActor { SELF, DIRECTOR, OPERATOR }` | 본인 / 원장 / 운영자 | |
@@ -227,7 +227,12 @@
 | 패스키·OTP 정보 | 기기 등록 삭제나 계정 삭제 때 함께 |
 | 접근 기록 | 1년 이상 별도 보관 |
 | 권한 변경 기록 | 3년 |
-| 개인정보 요청 기록 | 처리한 날부터 3년(ID만, 소속이 지워지거나 학원이 해지돼도 남김) |
+| 개인정보 요청 기록 | 처리한 날부터 3년(ID만, 소속이 지워지거나 학원이 해지돼도 남김). 원장 계정 삭제 요청도 같습니다. 정정할 항목은 고른 항목 코드만 남기고 자유 입력이나 고치기 전·후 값은 남기지 않음 |
+| 학원 해지 기록(`organization_terminations`, 가칭) | 요청 시각부터 3년. 학원 파기 대상에서 뺌 |
+| 위탁 문서 동의 기록(`organization_agreements`, 가칭, 서명자 이름 포함)과 서명본 | 학원 데이터 파기일(해지 요청일 + 30일)부터 5년 뒤 삭제(개인정보 보호법 제26조 제1항 근거, 12/2 법무 묶음에서 다시 확인) |
+| 삭제 작업 실행 기록(`deletion_runs`, 가칭) | 실행일부터 3년 |
+| 운영자 안내와 받는 사람 기록(`operator_announcements`·`operator_announcement_recipients`, 가칭) | 보낸 날부터 3년. 받는 사람 칸은 계정 FK 없이 ID 값만 두고, 본문에 특정인 이름을 쓰지 않음 |
+| 알림함(`notifications`) | `notify_at`부터 90일 뒤 삭제(최대값). 계정을 삭제하면 함께, 학원 항목이 모두 지워지면 함께 삭제(알림 행) |
 
 ## 8. 플랫폼
 
@@ -326,3 +331,5 @@
 | `access_logs.target_type` | 대상 종류 | 예: MEMBERSHIP / HOMEWORK / SUBMISSION_PHOTO / PERFORMANCE_RECORD / EXAM_SCORE / TEACHER_MEMO / COUNSELING_NOTE / STUDENT_EXPORT / REPORT (가칭) | 가칭. 값 목록 확정은 WBS 1.0.24b |
 | `permission_change_logs.actor_type` | 행위자 종류 | USER / OPERATOR / SYSTEM | 가칭. 확정은 해당 WBS 설계 때 |
 | `permission_change_logs.change_code` | 변경 코드 | 예: ROLE_ADDED / ROLE_REMOVED / ASSIGNMENT_ADDED / ASSIGNMENT_REMOVED / RESPONSIBILITY_TRANSFERRED / MEMBERSHIP_APPROVED / MEMBERSHIP_SUSPENDED / MEMBERSHIP_UNSUSPENDED / AUTH_APPROVAL_APPROVED / AUTH_APPROVAL_REJECTED / ORGANIZATION_CREATED / ORGANIZATION_REGISTRATION_VERIFIED / DIRECTOR_INVITATION_ISSUED. 사건 하나에 코드 하나 | 가칭. 예시 목록, 확정은 해당 WBS 설계 때 |
+| `membership_consents.withdrawn_by_membership_id` | 철회를 입력한 원장 | — | 가칭. 말·전화로 받은 철회를 원장이 대신 넣을 때 채웁니다. 철회를 받은 방법은 `withdraw_channel` |
+| `membership_consents.invalidated_at` | 무효 표시 시각 | — | 가칭. v1.3. 생년월일 정정 뒤 법정대리인 동의가 들어올 때 이전 본인 동의를 무효로 표시합니다(L-02). 그 전 14일 정지 동안은 동의 상태가 아니라 소속 정지로 모든 처리를 막습니다 |
