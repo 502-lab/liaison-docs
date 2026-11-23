@@ -229,7 +229,7 @@
 | 학원 해지 | 30일 동안 내려받기, 30일째 운영 파기, 요청일부터 37일 안에 백업까지 파기 |
 | 미동의 학생 정보 | 거부하면 즉시, 응답이 없으면 첫 초대 후 14일 |
 | 승인되지 않은 가입 | 동의 후 14일 안에 원장이 승인하지 않으면 즉시 |
-| 메시지 | 글은 보낸 날부터 1년(사진은 열 때 30일, 백업 없음). 퇴원·탈퇴·보호자 연결 해제는 30일, 학원 해지는 학원 데이터와 같이. 신고된 대화는 처리가 끝날 때까지 |
+| 메시지 | 글은 보낸 날부터 1년(사진은 열 때 30일, 백업 없음). 퇴원·탈퇴·보호자 연결 해제는 30일, 학원 해지는 학원 데이터와 같이. 신고된 대화는 처리가 끝날 때까지(그동안 소속이 지워지면 누가 보냈는지 가리키는 칸만 비우고 대화 내용은 남김). 처리가 끝나면 원래 삭제일이 지난 메시지는 바로 지우고, 학원이 해지하면 처리 중이어도 같이 파기(법무 L-36, 11/23) |
 | 메시지 신고 기록(`message_reports`, 가칭) | 신고한 날부터 1년(메시지와 함께 지우지 않음). 메시지·신고한 사람 소속이 지워지면 그 칸만 비움. 신고받은 사람 계정 ID는 소속이 지워져도 남기고 계정 삭제 때 비움. 학원 해지 때 파기. 본문은 복사하지 않음. 다시 가입하는 것을 막는 데 쓰지 않음 |
 | 메시지 차단 기록(`message_blocks`, 가칭) | 차단하는 동안 유지하고, 차단을 푼 날부터 1년(다시 차단하면 새로 셈). 어느 한쪽 소속·보호자 연결이 지워지면 함께 삭제. 학원 해지 때 파기 |
 | 원장·선생님 소속 정보(이름·계정 연결·담당·기록률) | 소속 해제 후 30일(백업 포함). 운영 DB 23일째에 행은 남기고 이름·계정 연결을 지움. 그 선생님이 남긴 학생 기록은 학생 기간을 따르고 작성자는 '퇴사한 선생님'으로 표시 |
@@ -364,3 +364,4 @@
 | `permission_change_logs.change_code` | 변경 코드 | 예: ROLE_ADDED / ROLE_REMOVED / ASSIGNMENT_ADDED / ASSIGNMENT_REMOVED / RESPONSIBILITY_TRANSFERRED / MEMBERSHIP_APPROVED / MEMBERSHIP_SUSPENDED / MEMBERSHIP_UNSUSPENDED / AUTH_APPROVAL_APPROVED / AUTH_APPROVAL_REJECTED / ORGANIZATION_CREATED / ORGANIZATION_REGISTRATION_VERIFIED / DIRECTOR_INVITATION_ISSUED. 사건 하나에 코드 하나 | 가칭. 예시 목록, 확정은 해당 WBS 설계 때 |
 | `membership_consents.withdrawn_by_membership_id` | 철회를 입력한 원장 | — | 가칭. 말·전화로 받은 철회를 원장이 대신 넣을 때 채웁니다. 철회를 받은 방법은 `withdraw_channel` |
 | `membership_consents.invalidated_at` | 무효 표시 시각 | — | 가칭. v1.3. 생년월일 정정 뒤 법정대리인 동의가 들어올 때 이전 본인 동의를 무효로 표시합니다(L-02). 그 전 14일 정지 동안은 동의 상태가 아니라 소속 정지로 모든 처리를 막습니다 |
+| `messages.sender_role` | 보낸 쪽 역할 | STUDENT / GUARDIAN / TEACHER / DIRECTOR (가칭) | 가칭. 확정은 WBS 3.2.1 설계 때. 소속이 지워져 `sender_id`가 비어도 남음(법무 L-36). 보낼 때 서버가 채우고 빈 값 없음 |
