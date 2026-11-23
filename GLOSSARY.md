@@ -361,7 +361,7 @@
 | `access_logs.action` | 행위 | VIEW / CREATE / UPDATE / DELETE / EXPORT / DOWNLOAD (가칭) | 가칭. 값 목록 확정은 WBS 1.0.24b |
 | `access_logs.target_type` | 대상 종류 | 예: MEMBERSHIP / HOMEWORK / SUBMISSION_PHOTO / PERFORMANCE_RECORD / EXAM_SCORE / TEACHER_MEMO / COUNSELING_NOTE / STUDENT_EXPORT / REPORT (가칭) | 가칭. 값 목록 확정은 WBS 1.0.24b |
 | `permission_change_logs.actor_type` | 행위자 종류 | USER / OPERATOR / SYSTEM | 가칭. 확정은 해당 WBS 설계 때 |
-| `permission_change_logs.change_code` | 변경 코드 | 예: ROLE_ADDED / ROLE_REMOVED / ASSIGNMENT_ADDED / ASSIGNMENT_REMOVED / RESPONSIBILITY_TRANSFERRED / MEMBERSHIP_APPROVED / MEMBERSHIP_SUSPENDED / MEMBERSHIP_UNSUSPENDED / AUTH_APPROVAL_APPROVED / AUTH_APPROVAL_REJECTED / ORGANIZATION_CREATED / ORGANIZATION_REGISTRATION_VERIFIED / DIRECTOR_INVITATION_ISSUED / MEMBERSHIP_IN_PERSON_CONFIRMED(선생님 대면 확인, 본인 확인 방법 `IN_PERSON`, v1.1). 사건 하나에 코드 하나 | 가칭. 예시 목록, 확정은 해당 WBS 설계 때 |
+| `permission_change_logs.change_code` | 변경 코드 | 예: ROLE_ADDED / ROLE_REMOVED / ASSIGNMENT_ADDED / ASSIGNMENT_REMOVED / RESPONSIBILITY_TRANSFERRED / MEMBERSHIP_APPROVED / MEMBERSHIP_SUSPENDED / MEMBERSHIP_UNSUSPENDED / AUTH_APPROVAL_APPROVED / AUTH_APPROVAL_REJECTED / ORGANIZATION_CREATED / ORGANIZATION_REGISTRATION_VERIFIED / DIRECTOR_INVITATION_ISSUED / MEMBERSHIP_IN_PERSON_CONFIRMED(선생님 대면 확인, 본인 확인 방법 `IN_PERSON`, v1.1) / MEMBERSHIP_APPROVAL_CANCELED(원장 QR 자동 승인을 [잘못 들어왔어요]로 취소, v1.1). 사건 하나에 코드 하나 | 가칭. 예시 목록, 확정은 해당 WBS 설계 때 |
 | `membership_consents.withdrawn_by_membership_id` | 철회를 입력한 원장 | — | 가칭. 말·전화로 받은 철회를 원장이 대신 넣을 때 채웁니다. 철회를 받은 방법은 `withdraw_channel` |
 | `membership_consents.invalidated_at` | 무효 표시 시각 | — | 가칭. v1.3. 생년월일 정정 뒤 법정대리인 동의가 들어올 때 이전 본인 동의를 무효로 표시합니다(L-02). 그 전 14일 정지 동안은 동의 상태가 아니라 소속 정지로 모든 처리를 막습니다 |
 | `messages.sender_role` | 보낸 쪽 역할 | STUDENT / GUARDIAN / TEACHER / DIRECTOR (가칭) | 가칭. 확정은 WBS 3.2.1 설계 때. 소속이 지워져 `sender_id`가 비어도 남음(법무 L-36). 보낼 때 서버가 채우고 빈 값 없음 |
@@ -371,3 +371,4 @@
 | `invitations.qr_issued_by_membership_id` | QR을 보여 준 사람의 소속 | — | 가칭. v1.1. 빈 값 허용. 원장 또는 그 학생의 담당 선생님 |
 | `invitations.in_person_confirmed_by_membership_id` | 선생님 [본인 확인함]을 누른 사람의 소속 | — | 가칭. v1.1. 빈 값 허용. 권한 변경 기록 `MEMBERSHIP_IN_PERSON_CONFIRMED`와 짝 |
 | `invitations.in_person_confirmed_at` | [본인 확인함]을 누른 시각 | — | 가칭. v1.1. 빈 값 허용 |
+| `invitations.qr_auto_approved_at` | 원장 QR 자동 승인 시각 | — | 가칭. v1.1. 빈 값 허용. [잘못 들어왔어요]를 그날 안에만 보여 주는 기준 |
