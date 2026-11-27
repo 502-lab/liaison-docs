@@ -219,7 +219,7 @@
 | 개인정보 처리 위탁 문서 (위탁 문서) | — | 학원(처리자)과 운영자(수탁자)가 맺는 문서. 맡기는 업무 범위와 하지 않는 일을 정합니다 | 원장 웹에서 동의해야 학원이 활성화됩니다(v1.3). 파일럿 학원과 웹 동의 기능이 준비되기 전에 가입하는 학원은 원장이 종이·PDF로 직접 서명하고(팀원 대리 서명 금지) 운영자가 서면 동의 기록으로 넣습니다 |
 | 재수탁자 | — | 운영자가 다시 맡기는 업체(서버·저장소 업체, FCM·APNs, 브라우저 푸시 서비스 등) | 학원은 위탁 문서 서명 때 허용 범위에 미리 동의합니다. 범위 안 교체는 적용 45일 전에 알립니다(원장 웹 통지, v1.3). 거부는 학원 해지 요청으로 하고(위약금 없음), 해지 요청이 접수될 때 거부로 기록합니다. 해지를 요청하지 않으면 답이 없는 것과 같이 적용일에 적용되고, 해지를 철회하면 거부도 철회되어 적용됩니다. 해지를 요청한 학원의 데이터는 새 업체로 옮기지 않습니다. 범위 밖 변경(예: 해외 서버, 맡기는 항목·목적이 늘어남)은 통지 화면을 쓰지 않고, 바뀐 위탁 문서에 원장 서명을 받습니다(운영 절차). 동의를 받기 전까지 그 학원에는 적용하지 않고, 모든 학원이 함께 쓰는 서버 등이면 적용일을 미룹니다 |
 | 처리 현황 확인서 | — | 운영자가 학원에 보내는, 그 학원 데이터를 어떻게 처리했는지(접근 기록 점검, 삭제 실행 내역) 정리한 문서 | 연 1회와 파일럿 종료 때 |
-| 사고 대응 | — | 개인정보 사고 때 운영자가 하는 일: 세션 끊기, 점검 모드, 운영자 안내 발송(대상은 운영자가 고른 학원·역할·사람, 고정 문구 푸시 + 알림함 본문, 22:00~07:00에는 무음이고 알림함에는 바로 넣음, 푸시에 '사고' 같은 말을 쓰지 않음, 수신자별 발송·읽음 기록), 사고 안내 페이지(서비스와 분리된 정적 페이지) | WBS 1.0.31·1.0.32 |
+| 사고 대응 | — | 개인정보 사고 때 운영자가 하는 일: 세션 끊기, 점검 모드, 운영자 안내 발송(대상은 운영자가 고른 학원·역할·사람으로, 범위(전체·학원·사람)와 받는 역할을 따로 고름, 고정 문구 푸시 + 알림함 본문, 22:00~07:00에는 무음이고 알림함에는 바로 넣음, 푸시에 '사고' 같은 말을 쓰지 않음, 수신자별 발송·읽음 기록), 사고 안내 페이지(서비스와 분리된 정적 페이지) | WBS 1.0.31·1.0.32 |
 | 학원 데이터로 하지 않는 일 | — | 위탁 문서에 적은 금지 목록: 광고, 여러 학원 통합 통계, AI 학습·판정 기준 조정, 판매, 다른 학원 노출 | 원장·선생님 화면에 그 학생이 다니는 다른 학원의 이름·숙제·합계를 보여주지 않습니다(학생 본인 화면은 괜찮음). AI 판독(선택 동의한 학생의 사진을 이미 만들어진 모델에 보내 결과만 받는 것)은 'AI 학습'에 해당하지 않습니다 |
 | 개인정보 영향 검토 (PIA) | — | 실제 학생 데이터 처리에 대해 작성한 자율 검토. 법률상 "개인정보 영향평가"(제33조, 공공기관 의무 평가)가 아닙니다 | AI 판독은 이 검토 범위 밖이고 따로 검토합니다(WBS 3.0.6) |
 
@@ -253,7 +253,7 @@
 | 위탁 문서 동의 기록(`organization_agreements`, 가칭, 서명자 이름 포함)과 서명본 | 학원 데이터 파기일(해지 요청일 + 30일)부터 5년 뒤 삭제(개인정보 보호법 제26조 제1항 근거, 12/2 법무 묶음에서 다시 확인) |
 | 삭제 작업 실행 기록(`deletion_runs`, 가칭) | 실행일부터 3년 |
 | 지운 데이터 ID 목록(`deletion_tombstones`, 가칭) | 지운 날부터 8일. ID만, 백업 복원 뒤 다시 지우는 데만 씀 |
-| 운영자 안내와 받는 사람 기록(`operator_announcements`·`operator_announcement_recipients`, 가칭) | 보낸 날부터 3년. 받는 사람 칸은 계정 FK 없이 ID 값만 두고, 본문에 특정인 이름을 쓰지 않음 |
+| 운영자 안내와 받는 사람·받는 역할 기록(`operator_announcements`·`operator_announcement_recipients`·`operator_announcement_audience_roles`, 가칭) | 보낸 날부터 3년. 받는 사람 칸은 계정 FK 없이 ID 값만 두고, 본문에 특정인 이름을 쓰지 않음 |
 | 알림함(`notifications`) | `notify_at`부터 90일 뒤 삭제(최대값). 계정을 삭제하면 함께, 학원 항목이 모두 지워지면 함께 삭제(알림 행) |
 | 유형 분석 결과(`problem_analyses`, 가칭) | AI 판독 결과와 같음(학생 데이터와 같고, AI 판독 동의를 철회하면 즉시) |
 | 공지 확인 기록(`notice_reads`, 가칭) | 그 공지의 적용일부터 3년. 계정을 삭제하면 함께 삭제 |
@@ -343,8 +343,9 @@
 | `privacy_requests` | 열람·정정·삭제 요청 기록(원장 계정 삭제 요청 포함, 11/21 개발 확정) | v1.0 | 가칭. 코드 이름 확정은 해당 WBS 설계 때. 칸 값(가칭): `request_type`(요청 종류): ACCESS / CORRECTION / DELETION / PROCESSING_STOP(처리정지, 11/27) / ACCOUNT_DELETION (가칭); `reject_reason_code`(거절 사유): NULL 허용, 거절일 때만 채움. LEGAL_RESTRICTION / THIRD_PARTY_RIGHTS / NO_DATA / NO_ERROR / SERVICE_REQUIRED (가칭). 종류별로 받는 코드: ACCESS는 LEGAL_RESTRICTION·THIRD_PARTY_RIGHTS·NO_DATA, CORRECTION은 NO_DATA·NO_ERROR, DELETION은 LEGAL_RESTRICTION·NO_DATA, PROCESSING_STOP은 LEGAL_RESTRICTION·NO_DATA·SERVICE_REQUIRED, ACCOUNT_DELETION은 거절 없음. 서버는 종류에 맞지 않는 코드를 거절함. 처리 메모 칸은 두지 않음(11/27 법무); `correction_item`(정정할 항목): v1.1 · NULL 허용. NAME / GRADE / BIRTH_DATE / SCHOOL_NAME / HOMEWORK / PERFORMANCE_RECORD / OTHER (가칭). 자유 입력 없음; `status`(처리 상태): PENDING / COMPLETED / REJECTED / CANCELED (가칭). ACCOUNT_DELETION에는 REJECTED가 없습니다(원장 계정 삭제 요청 행) |
 | `deletion_runs` | 자동 삭제 작업 실행 기록 | v1.0 | 가칭. 코드 이름 확정은 해당 WBS 설계 때. 칸 값(가칭): `job_type`(작업 종류): MEMBERSHIP_DATA / SUBMISSION_PHOTOS / WORKSHEET_FILES / INVITATIONS / UNAPPROVED_SIGNUPS / ORPHAN_ACCOUNTS / ORGANIZATION_PURGE / LOG_EXPIRY(기록·위탁 동의 등 보관 기간 만료) / NOTIFICATIONS(90일) / ACCOUNT_DELETION(계정 삭제 뒤 학원을 가로지르는 정리, 예: reported_user_id 비우기) / GUARDIAN_LINKS(v1.3) / SCHEDULES(v2.3) / MESSAGES(v3.2) / TUTOR_SIGNUPS(v3.3) / TEXTBOOK_FEEDBACK_TEXTS(v1.3, 교재 수정 이유·신고 설명 30일 삭제) (가칭). ACCOUNT_DELETION 작업은 바꾼 행 수를 남김; `result`(결과): SUCCEEDED / FAILED |
 | `deletion_tombstones` | 지운 데이터 ID 목록(백업에서 복원한 뒤 다시 지울 대상) | v1.0 | 가칭. 코드 이름 확정은 해당 WBS 설계 때. 칸(가칭): 대상 종류·대상 ID·학원 ID(값만)·지운 시각. FK 없음. 이름·내용·사유 없이 ID만 담고, 다시 가입 막기·통계에는 쓰지 않습니다. 백업이 7일 뒤 사라지므로 지운 날부터 8일이 지나면 자동 삭제합니다. 백업에서 복원하면 이 목록으로 삭제를 다시 돌리고, 복원한 DB는 다시 지우기를 마친 뒤에 서비스에 연결합니다(법무 L-08, 11/23). 건수 기록은 `deletion_runs`가 따로 맡고, 거기에도 사유 칸은 없습니다(작업 종류 `job_type`만) |
-| `operator_announcements` | 운영자 안내(사고 대응) | v1.0 | 가칭. 코드 이름 확정은 해당 WBS 설계 때. 칸 값(가칭): `audience_kind`(대상 지정 방식): ALL / ORGANIZATIONS / USERS (가칭) |
-| `operator_announcement_recipients` | 운영자 안내의 받는 사람별 발송·읽음 | v1.0 | 가칭. 코드 이름 확정은 해당 WBS 설계 때 |
+| `operator_announcements` | 운영자 안내(사고 대응) | v1.0 | 가칭. 코드 이름 확정은 해당 WBS 설계 때. 칸 값(가칭): `audience_kind`(대상 범위): ALL / ORGANIZATIONS / USERS (가칭). 받는 역할은 `operator_announcement_audience_roles`에 따로 둠(11/27) |
+| `operator_announcement_recipients` | 운영자 안내의 받는 사람별 발송·읽음 | v1.0 | 가칭. 코드 이름 확정은 해당 WBS 설계 때. 받는 사람은 보낼 때 정해 계정마다 한 행씩 남김. 고른 역할 중 하나라도 가진 소속이 있는 계정이 대상이고, 그런 소속이 여럿이어도 1건(11/27). 범위가 ALL이고 역할 행이 없으면 소속 없는 계정을 포함한 모든 계정이 대상. 어느 소속 상태까지 받는지는 WBS 1.0.32 설계 때 정하되, 정지·삭제 예정 소속과 잠긴 학원의 소속도 받을 수 있어야 함(유출 통지 대상, 11/27 법무) |
+| `operator_announcement_audience_roles` | 운영자 안내의 받는 역할(역할마다 한 행) | v1.0 | 가칭. 코드 이름 확정은 해당 WBS 설계 때. 값은 `MembershipRole`의 DIRECTOR / TEACHER / STUDENT / GUARDIAN. 행이 없으면 모든 역할. `audience_kind`가 ALL·ORGANIZATIONS일 때만 두고 USERS면 두지 않음(서버 검사). `notice_audience_roles`와 같은 모양(11/27) |
 | `performance_record_histories` | 수행 기록 수정 이력(확정 뒤 고친 것) | v1.1 | 가칭. 코드 이름 확정은 해당 WBS 설계 때 |
 | `exams` | 시험(학원이 정한 시험명·대표 날짜) | v1.1 | 가칭. 코드 이름 확정은 해당 WBS 설계 때 |
 | `teacher_memo_shares` | 인수인계로 새 담당에게 보여 주는 메모 | v1.3 | 가칭. 코드 이름 확정은 해당 WBS 설계 때 |
